@@ -167,7 +167,7 @@ drawStamp=function(c,st,t){
 const oldWorld=drawWorld;
 drawWorld=function(c,t,overlay){
  oldWorld(c,t,false);
- if(state.roofMode==='interior')for(const w of state.partitions)if((w.level||1)===state.level){tracePath(c,w.pts);c.strokeStyle='#4b493e';c.lineWidth=w.t||4;c.lineCap='square';c.stroke();c.strokeStyle='#cec6ae';c.lineWidth=Math.max(1,(w.t||4)-2);c.stroke()}
+ if(layerVisible('buildings')&&state.roofMode==='interior')for(const w of state.partitions)if((w.level||1)===state.level){tracePath(c,w.pts);c.strokeStyle='#4b493e';c.lineWidth=w.t||4;c.lineCap='square';c.stroke();c.strokeStyle='#cec6ae';c.lineWidth=Math.max(1,(w.t||4)-2);c.stroke()}
  if(overlay)drawOverlay(c)
 };
 const oldOverlay=drawOverlay;
@@ -311,7 +311,7 @@ canvas.addEventListener('pointerdown',e=>{if(tool!=='prefab'||spaceDown||e.butto
 function innerSegments(b){if(state.roofMode!=='interior'||state.level>(b.floors||1)||b.kind!=='house'||b.pts.length!==4)return[];const{cx,cy,a,w,d}=localBox(b),plan=floorPlan(b);let lines=[];if(plan==='split')lines=[[[w*.12,-d/2],[w*.12,-2]],[[w*.12,6],[w*.12,d/2]]];if(plan==='rooms')lines=[[[-w*.12,-d/2],[-w*.12,-2]],[[-w*.12,6],[-w*.12,d/2]],[[-w*.12,0],[w*.15,0]],[[w*.33,0],[w/2,0]]];return lines.map(p=>p.map(([x,y])=>[cx+x*Math.cos(a)-y*Math.sin(a),cy+x*Math.sin(a)+y*Math.cos(a)]))}
 function vttData(){const g=gridPixels(),pt=([x,y])=>({x:+(x/g).toFixed(3),y:+(y/g).toFixed(3)}),los=[],portals=[];
  for(const b of state.buildings){if(state.roofMode==='interior'&&state.level>(b.floors||1))continue;const p=b.pts;if(b.kind==='house'&&p.length===4){const d=buildingDoor(b);los.push([p[3],p[0],p[1],p[2],d.a].map(pt),[d.b,p[3]].map(pt));portals.push({position:pt([d.cx,d.cy]),bounds:[pt(d.a),pt(d.b)],rotation:Math.atan2(d.b[1]-d.a[1],d.b[0]-d.a[0]),closed:!b.doorOpen,freestanding:false})}else los.push(p.concat([p[0]]).map(pt));for(const line of innerSegments(b))los.push(line.map(pt))}
- for(const w of state.walls)los.push(rdp(sm(w),1.5).map(pt));if(state.roofMode==='interior')for(const w of state.partitions)if(w.level===state.level)los.push(w.pts.map(pt));
+ for(const w of state.walls)los.push(rdp(sm(w),1.5).map(pt));if(layerVisible('buildings')&&state.roofMode==='interior')for(const w of state.partitions)if(w.level===state.level)los.push(w.pts.map(pt));
  const lights=[];for(const st of state.stamps){const d=STAMPS[st.type];if(d?.light&&(!st.floor||(state.roofMode==='interior'&&st.floor===state.level)))lights.push({position:pt([st.x,st.y]),range:+(d.light[0]*st.s/g).toFixed(2),intensity:1,color:'ff'+d.light[1].split(',').map(v=>(+v).toString(16).padStart(2,'0')).join(''),shadows:true})}
  return{format:.3,resolution:{map_origin:{x:0,y:0},map_size:{x:W/g,y:H/g},pixels_per_grid:g},line_of_sight:los,objects_line_of_sight:[],portals,environment:{baked_lighting:state.night>0,ambient_light:state.night>0?'ff1a2550':'ffffffff'},lights,image:renderTo(1).toDataURL('image/png').split(',')[1]}
 }

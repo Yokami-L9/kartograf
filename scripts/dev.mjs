@@ -30,7 +30,7 @@ if(live)watcher=watch(join(root,'src'),{recursive:true},()=>{clearTimeout(timer)
 server.on('error',e=>{console.error(e.code==='EADDRINUSE'?`Port ${port} is busy. Stop the other server or use: npm run dev -- --port 5174`:e.message);watcher?.close();process.exitCode=1});
 server.listen(port,'127.0.0.1',()=>{
  const url=`http://localhost:${server.address().port}`;
- console.log(`\nКартограф · Sandbox 02\n${url}\n${live?'Live reload is on. Edit files in src/.':'Static local mode.'}\nStop: Control+C\n`);
+ console.log(`\nКартограф · Studio 03\n${url}\n${live?'Live reload is on. Edit files in src/.':'Static local mode.'}\nStop: Control+C\n`);
  if(args.includes('--open')){
   const bin=process.platform==='darwin'?'open':process.platform==='win32'?'cmd':'xdg-open';
   const params=process.platform==='win32'?['/c','start','',url]:[url];

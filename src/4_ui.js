@@ -130,7 +130,7 @@ canvas.addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){touches.se
  if(tool==='house'||tool==='tower'){drag={box:[x,y,x,y]};return}
  if(tool==='tree'){addTree(x,y,opts.treeR);invalidate(false,{S:1});commit();return}
  if(tool==='forest'){scatter(x,y,opts.forestR,opts.treeR,10,Math.random,opts.autumn);invalidate(false,{S:1});drag={forest:1};return}
- if(tool==='stamp'){addStamp(opts.stamp,x,y,opts.stampS,opts.stamp==='boat'||opts.stamp==='tent'||opts.stamp==='cart'?Math.round(Math.random()*60-30):0);invalidate(false,{S:1});commit();return}
+ if(tool==='stamp'){addStamp(opts.stamp,x,y,opts.stampS,opts.placeRot||0);invalidate(false,{S:1});commit();return}
  if(tool==='label'){const l={id:nid(),x,y,text:'Новое место',size:28};state.labels.push(l);commit();sel={k:'labels',id:l.id};setToolKeepSel();setTimeout(()=>{const i=$('sel-text');if(i){i.focus();i.select()}},30);return}
  if(tool==='erase'){const h=hit(x,y);if(h&&!['trees','stamps'].includes(h.k)){if(h.k==='buildings')reserveErasedBuilding(h.id);state[h.k]=state[h.k].filter(o=>o.id!==h.id);invalidate(false,{S:1,der:1})}eraseSmall(x,y);drag={erase:1};return}});
 function setToolKeepSel(){tool='select';renderTools();renderPanel();updHint();if(window.innerWidth<=900)$('panel').classList.add('open')}
@@ -152,8 +152,8 @@ canvas.addEventListener('pointerup',e=>{endTouch(e);if(!drag)return;const d=drag
  if(d.ground){commit();return}
  if(d.path){const p=rdp(d.path,2.2);const len=p.reduce((s,q,i)=>i?s+dist(...q,...p[i-1]):0,0);if(len<20)return;
   if(tool==='river')state.rivers.push({id:nid(),pts:p,w:opts.riverW,bank:opts.bank});
-  if(tool==='road')state.roads.push({id:nid(),pts:p,w:opts.roadW,...(opts.paved?{paved:true}:{})});
-  if(tool==='wall')state.walls.push({id:nid(),pts:p,t:opts.wallT,h:opts.wallH});
+  if(tool==='road')state.roads.push({id:nid(),pts:p,w:opts.roadW,mat:opts.roadMat||'dirt',...(opts.paved?{paved:true}:{})});
+  if(tool==='wall')state.walls.push({id:nid(),pts:p,t:opts.wallT,h:opts.wallH,style:opts.wallStyle||'stone'});
   if(tool==='free'){if(p.length<3)return;state.buildings.push({id:nid(),kind:'free',pts:chaikin(rdp(d.path,3),1),h:opts.bH,color:opts.bColor,...buildingDefaults()})}
   invalidate(false,{S:1,der:1});commit();return}
  if(d.box){const[x0,y0,x1,y1]=d.box,w=Math.abs(x1-x0),h=Math.abs(y1-y0);if(w<8||h<8)return;const cx=(x0+x1)/2,cy=(y0+y1)/2;

@@ -67,6 +67,6 @@ window.addEventListener('resize',()=>{resize();fit()});
 resize();fit();renderTools();
 let saved=null;try{saved=localStorage.getItem('kartograf-map-v3')||localStorage.getItem('kartograf-map-v2')}catch(e){}
 if(saved){try{restore(saved)}catch(e){loadDemo()}}else loadDemo();
-booting=false;prev=snap();updUndo();renderPanel();updHint();updNight();requestAnimationFrame(frame);
-window.__k={get state(){return state},get opts(){return opts},get selection(){return sel},restore,snap,undo,redo,fit,placeKit,selectDistrict,vttData,polysMeet,localBox,buildingDoor,freeSpot,renderPanel,generateDistrict,makeDistrict,validateMap,loadSandboxDemo,renderTo,hit,exportPng,get derived(){return derived},setTool,get view(){return view},loadDemo,commit,invalidate,exportVtt};
+booting=false;prev=snap();updUndo();renderPanel();updHint();updNight();studioReady();requestAnimationFrame(frame);
+window.__k={get measurement(){return measurement},get catalog(){return CATALOG},get studio(){return studio},useAsset,setLibraryCategory,layerVisible,drawWeather,drawStamp,drawTree,addStamp,addTree,STAMPS,MATS,get state(){return state},get opts(){return opts},get selection(){return sel},restore,snap,undo,redo,fit,placeKit,selectDistrict,vttData,polysMeet,localBox,buildingDoor,freeSpot,renderPanel,generateDistrict,makeDistrict,validateMap,loadSandboxDemo,renderTo,hit,exportPng,get derived(){return derived},setTool,get view(){return view},loadDemo,commit,invalidate,exportVtt};
 })();

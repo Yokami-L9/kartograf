@@ -28,9 +28,9 @@ async def main():
   await pg.evaluate('__k.state.roofMode="interior";__k.state.level=1;__k.invalidate(true);__k.renderPanel();__k.fit()');await pg.wait_for_timeout(200);await pg.screenshot(path=str(R/'qa/kits.png'))
   # Legacy project compatibility.
   legacy={'hillOps':[],'waterOps':[],'groundOps':[],'rivers':[],'roads':[],'buildings':[{'id':1,'kind':'house','pts':[[10,10],[50,10],[50,40],[10,40]],'h':18,'color':'#b4553f'}],'walls':[],'trees':[],'stamps':[],'labels':[],'light':40,'night':0,'grid':False}
-  await pg.evaluate('s=>__k.restore(JSON.stringify(s))',legacy);await check('Version 1 project migrated','__k.state.schemaVersion===3&&__k.state.buildings[0].floors===1&&__k.state.districts.length===0')
+  await pg.evaluate('s=>__k.restore(JSON.stringify(s))',legacy);await check('Version 1 project migrated','__k.state.schemaVersion===4&&__k.state.buildings[0].floors===1&&__k.state.districts.length===0')
   # Six-second animation download.
-  await pg.evaluate('__k.loadSandboxDemo();__k.setTool("select");__k.fit();__k.renderPanel()');await pg.locator('summary').click()
+  await pg.evaluate('__k.loadSandboxDemo();__k.setTool("select");__k.fit();__k.renderPanel()');await pg.click('[data-inspector=scene]');await pg.locator('summary').click()
   async with pg.expect_download(timeout=25000) as dl:await pg.click('#exVid')
   await (await dl.value).save_as(str(R/'qa/animation.webm'));checks.append({'test':'Animation download produced','pass':(R/'qa/animation.webm').stat().st_size>1000})
   await pg.evaluate('__k.setTool("select");Object.assign(__k.view,{s:1.45,x:-1300,y:-350})');await pg.wait_for_timeout(2100);await pg.screenshot(path=str(R/'qa/delivery-exterior.png'))
