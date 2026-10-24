@@ -3,7 +3,7 @@ import {fileURLToPath} from 'node:url';
 import {dirname,join,resolve} from 'node:path';
 import {Script} from 'node:vm';
 export const root=dirname(dirname(fileURLToPath(import.meta.url)));
-export const parts=['1_head.html','2_core.js','3_draw.js','4_ui.js','6_sandbox.js','5_boot.js'];
+export const parts=['1_head.html','2_core.js','3_draw.js','4_ui.js','6_sandbox.js','7_studio.js','5_boot.js'];
 export async function assemble(){
  const text=(await Promise.all(parts.map(p=>readFile(join(root,'src',p),'utf8')))).join('\n')+'\n</script>\n</body>\n</html>\n';
  const start=text.indexOf('<script>')+8,end=text.lastIndexOf('</script>');

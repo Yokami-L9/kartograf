@@ -1,0 +1,187 @@
+{
+  "catalog": 97,
+  "checks": [
+    {
+      "test": "Catalog unique and complete",
+      "pass": true
+    },
+    {
+      "test": "Category terrain",
+      "pass": true
+    },
+    {
+      "test": "Thumbnails terrain",
+      "pass": true
+    },
+    {
+      "test": "Category roads",
+      "pass": true
+    },
+    {
+      "test": "Thumbnails roads",
+      "pass": true
+    },
+    {
+      "test": "Category buildings",
+      "pass": true
+    },
+    {
+      "test": "Thumbnails buildings",
+      "pass": true
+    },
+    {
+      "test": "Category nature",
+      "pass": true
+    },
+    {
+      "test": "Thumbnails nature",
+      "pass": true
+    },
+    {
+      "test": "Category props",
+      "pass": true
+    },
+    {
+      "test": "Thumbnails props",
+      "pass": true
+    },
+    {
+      "test": "Category interior",
+      "pass": true
+    },
+    {
+      "test": "Thumbnails interior",
+      "pass": true
+    },
+    {
+      "test": "Category effects",
+      "pass": true
+    },
+    {
+      "test": "Thumbnails effects",
+      "pass": true
+    },
+    {
+      "test": "Global search outside active category",
+      "pass": true
+    },
+    {
+      "test": "Favorite filter",
+      "pass": true
+    },
+    {
+      "test": "Favorites persist",
+      "pass": true
+    },
+    {
+      "test": "Search empty state",
+      "pass": true
+    },
+    {
+      "test": "Road material through pointer",
+      "pass": true
+    },
+    {
+      "test": "Tree species through pointer",
+      "pass": true
+    },
+    {
+      "test": "Tree species inspector",
+      "pass": true
+    },
+    {
+      "test": "Object placement and rotation",
+      "pass": true
+    },
+    {
+      "test": "Scatter places multiple objects",
+      "pass": true
+    },
+    {
+      "test": "Scatter undone in one operation",
+      "pass": true
+    },
+    {
+      "test": "Scatter redo",
+      "pass": true
+    },
+    {
+      "test": "Weather and pause controls",
+      "pass": true
+    },
+    {
+      "test": "Paused rendering deterministic",
+      "pass": true
+    },
+    {
+      "test": "Animated object changes frames",
+      "pass": true
+    },
+    {
+      "test": "Settings roundtrip",
+      "pass": true
+    },
+    {
+      "test": "Hidden objects excluded from hit test",
+      "pass": true
+    },
+    {
+      "test": "Hidden props renderer empty",
+      "pass": true
+    },
+    {
+      "test": "Layer state roundtrip",
+      "pass": true
+    },
+    {
+      "test": "Ruler measures without map mutation",
+      "pass": true
+    },
+    {
+      "test": "Measurement does not dirty map",
+      "pass": true
+    },
+    {
+      "test": "Escape clears ruler",
+      "pass": true
+    },
+    {
+      "test": "Every object validates and renders",
+      "pass": true
+    },
+    {
+      "test": "Legacy settings migrated",
+      "pass": true
+    },
+    {
+      "test": "Mobile no horizontal overflow",
+      "pass": true
+    },
+    {
+      "test": "Mobile library closes on choice",
+      "pass": true
+    },
+    {
+      "test": "Mobile scene controls reachable",
+      "pass": true
+    },
+    {
+      "test": "Drawers mutually exclusive",
+      "pass": true
+    },
+    {
+      "test": "Reduced motion renderer valid",
+      "pass": true
+    },
+    {
+      "test": "No external requests",
+      "pass": true
+    },
+    {
+      "test": "No JavaScript errors",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "network": []
+}

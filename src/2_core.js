@@ -62,7 +62,7 @@ const STAMPS={
  lantern:{n:'Фонарь',r:6,h:10,light:[115,'255,205,120']},well:{n:'Колодец',r:12,h:8},barrel:{n:'Бочка',r:7,h:7},
  crate:{n:'Ящик',r:8,h:6},tent:{n:'Палатка',r:13,h:9},hay:{n:'Стог',r:10,h:7},
  boat:{n:'Лодка',r:12,h:2},cart:{n:'Телега',r:13,h:6},stall:{n:'Лавка',r:13,h:8}};
-function blank(){return{hillOps:[],waterOps:[],groundOps:[],rivers:[],roads:[],buildings:[],walls:[],trees:[],stamps:[],labels:[],districts:[],partitions:[],schemaVersion:3,name:'Новая локация',roofMode:'roof',level:1,snap:false,gridSize:10,light:40,night:0,grid:false}}
+function blank(){return{hillOps:[],waterOps:[],groundOps:[],rivers:[],roads:[],buildings:[],walls:[],trees:[],stamps:[],labels:[],districts:[],partitions:[],schemaVersion:4,layers:{roads:true,water:true,buildings:true,nature:true,props:true,labels:true,shadows:true},weather:'clear',weatherAmount:.45,motion:true,wind:.5,name:'Новая локация',roofMode:'roof',level:1,snap:false,gridSize:10,light:40,night:0,grid:false}}
 let state=blank();
 let uid=1;const nid=()=>uid++;
 const opts={hillR:60,hillLvl:1,waterR:50,groundR:40,mat:'dirt',riverW:26,bank:'grass',roadW:14,bH:18,bColor:'#b4553f',wallT:10,wallH:14,treeR:13,forestR:70,eraseR:24,stamp:'campfire',stampS:1};
@@ -84,7 +84,10 @@ const shadowVec=()=>{const a=state.light*Math.PI/180;return{x:Math.cos(a),y:Math
 function strokeOp(c,op,from,mode){c.globalCompositeOperation=mode;c.fillStyle=c.strokeStyle='#000';c.lineCap=c.lineJoin='round';c.lineWidth=op.r*2;const p=op.pts;if(p.length===1){c.beginPath();c.arc(p[0][0],p[0][1],op.r,0,7);c.fill()}else{c.beginPath();c.moveTo(p[from][0],p[from][1]);for(let i=from+1;i<p.length;i++)c.lineTo(p[i][0],p[i][1]);c.stroke()}c.globalCompositeOperation='source-over'}
 function applyHillOp(op,from=0){if(op.m==='add')strokeOp(op.l===2?mh2:mh1,op,from,'source-over');else{strokeOp(mh2,op,from,'destination-out');if(op.l!==2)strokeOp(mh1,op,from,'destination-out')}alpha.h1=alpha.h2=null}
 function applyWaterOp(op,from=0){strokeOp(mwt,op,from,op.m==='add'?'source-over':'destination-out');alpha.w=null}
-function applyGroundOp(op,from=0){const p=op.pts;gctx.filter='blur(2.5px)';gctx.strokeStyle=gctx.fillStyle=(MATS[op.mat]||MATS.grass).p;gctx.lineCap=gctx.lineJoin='round';gctx.lineWidth=op.r*2;if(p.length===1){gctx.beginPath();gctx.arc(p[0][0],p[0][1],op.r,0,7);gctx.fill()}else{gctx.beginPath();gctx.moveTo(p[from][0],p[from][1]);for(let i=from+1;i<p.length;i++)gctx.lineTo(p[i][0],p[i][1]);gctx.stroke()}gctx.filter='none'}
+function applyGroundOp(op,from=0){const p=op.pts.slice(from);if(!p.length)return;const pad=op.r+10,x=Math.max(0,Math.floor(Math.min(...p.map(q=>q[0]))-pad)),y=Math.max(0,Math.floor(Math.min(...p.map(q=>q[1]))-pad)),w=Math.min(W-x,Math.ceil(Math.max(...p.map(q=>q[0]))+pad-x)),h=Math.min(H-y,Math.ceil(Math.max(...p.map(q=>q[1]))+pad-y));if(w<=0||h<=0)return;
+ // Blur only the brush mask, never the actual stone / wood / grass texture.
+ tctx.clearRect(x,y,w,h);tctx.filter='blur(2.5px)';strokeOp(tctx,{...op,pts:p},0,'source-over');tctx.filter='none';tctx.globalCompositeOperation='source-in';tctx.fillStyle=(MATS[op.mat]||MATS.grass).p;tctx.fillRect(x,y,w,h);tctx.globalCompositeOperation='source-over';gctx.drawImage(tmpC,x,y,w,h,x,y,w,h)
+}
 function rebuildMasks(){for(const c of[mh1,mh2,mwt])c.clearRect(0,0,W,H);for(const op of state.hillOps)applyHillOp(op);for(const op of state.waterOps)applyWaterOp(op);alpha={};organicAll()}
 function rebuildGround(){gctx.fillStyle=MATS.grass.p;gctx.fillRect(0,0,W,H);for(const op of state.groundOps)applyGroundOp(op)}
 function sample(key,c,x,y){if(!alpha[key])alpha[key]=c.getImageData(0,0,W,H).data;x|=0;y|=0;if(x<0||y<0||x>=W||y>=H)return false;return alpha[key][(y*W+x)*4+3]>127}
@@ -94,7 +97,7 @@ function tintFrom(src,fill,blur){tctx.clearRect(0,0,W,H);tctx.filter=blur?`blur(
 function dilateFrom(src,d,fill){tctx.clearRect(0,0,W,H);for(let a=0;a<8;a++)tctx.drawImage(src,Math.cos(a*Math.PI/4)*d,Math.sin(a*Math.PI/4)*d);tctx.drawImage(src,0,0);tctx.globalCompositeOperation='source-in';tctx.fillStyle=fill;tctx.fillRect(0,0,W,H);tctx.globalCompositeOperation='source-over'}
 function drawLevel(src,top,s,k){tintFrom(src,'#26301a',6);actx.globalAlpha=.3;actx.drawImage(tmpC,s.x*22*k,s.y*22*k);actx.globalAlpha=1;tintFrom(src,'#6a5538');actx.drawImage(tmpC,s.x*10*k,s.y*10*k);tintFrom(src,'#866c48');actx.drawImage(tmpC,s.x*5*k,s.y*5*k);tintFrom(src,'#d2df9f');actx.drawImage(tmpC,-s.x*2.5,-s.y*2.5);tintFrom(src,top);actx.drawImage(tmpC,0,0)}
 function renderA(){const s=shadowVec();actx.drawImage(layG,0,0);
- if(state.waterOps.length){dilateFrom(oWt,9,'#d6c48c');actx.drawImage(tmpC,0,0);dilateFrom(oWt,4,'#b9a874');actx.drawImage(tmpC,0,0);tintFrom(oWt,'#4a93b8');actx.drawImage(tmpC,0,0);tintFrom(oWt,'#2f6f93',16);actx.globalAlpha=.85;actx.drawImage(tmpC,0,0);tintFrom(oWt,'#1f5778',34);actx.drawImage(tmpC,0,0);actx.globalAlpha=1}
+ if(state.waterOps.length&&layerVisible('water')){dilateFrom(oWt,9,'#d6c48c');actx.drawImage(tmpC,0,0);dilateFrom(oWt,4,'#b9a874');actx.drawImage(tmpC,0,0);tintFrom(oWt,'#4a93b8');actx.drawImage(tmpC,0,0);tintFrom(oWt,'#2f6f93',16);actx.globalAlpha=.85;actx.drawImage(tmpC,0,0);tintFrom(oWt,'#1f5778',34);actx.drawImage(tmpC,0,0);actx.globalAlpha=1}
  if(state.hillOps.some(o=>o.l!==2))drawLevel(oH1,hillPat,s,1);if(state.hillOps.some(o=>o.l===2))drawLevel(oH2,plateauPat,s,1.15)}
 
 /* ---------- derived: bridges, waterfalls, stairs ---------- */
@@ -110,8 +113,8 @@ function recomputeDerived(){const oB=derived.bridges.length,oF=derived.falls.len
 function sweep(fn,L){for(let k=0;k<=L;k+=1.5){sctx.save();sctx.translate(SV.x*k,SV.y*k);fn();sctx.restore()}}
 let SV={x:1,y:0};
 function renderS(){SV=shadowVec();sctx.clearRect(0,0,W,H);sctx.fillStyle=sctx.strokeStyle='#1d2414';sctx.lineCap=sctx.lineJoin='round';
- for(const b of state.buildings)sweep(()=>{tracePath(sctx,b.pts,true);sctx.fill()},b.h*1.1);
- for(const w of state.walls){sctx.lineWidth=w.t;sweep(()=>{tracePath(sctx,sm(w));sctx.stroke()},w.h*1.1)}
- for(const t of state.trees){sctx.beginPath();sctx.ellipse(t.x+SV.x*t.r*.9,t.y+SV.y*t.r*.9,t.r*1.05,t.r*.95,0,0,7);sctx.fill()}
- for(const st of state.stamps){const d=STAMPS[st.type];if(st.floor&&!(state.roofMode==='interior'&&st.floor===state.level))continue;if(!d||!d.h)continue;const r=d.r*st.s;sctx.beginPath();sctx.ellipse(st.x+SV.x*d.h*st.s,st.y+SV.y*d.h*st.s,r,r*.9,0,0,7);sctx.fill()}
- for(const b of derived.bridges){sctx.save();sctx.translate(b.x+SV.x*6,b.y+SV.y*6);sctx.rotate(b.ang);sctx.fillRect(-b.len/2,-b.wd/2,b.len,b.wd);sctx.restore()}}
+ for(const b of state.buildings)if(layerVisible('buildings')&&(state.roofMode!=='interior'||state.level<=(b.floors||1)))sweep(()=>{tracePath(sctx,b.pts,true);sctx.fill()},b.h*1.1);
+ for(const w of state.walls){if(!layerVisible('buildings'))continue;sctx.lineWidth=w.t;sweep(()=>{tracePath(sctx,sm(w));sctx.stroke()},w.h*1.1)}
+ for(const t of state.trees){if(!layerVisible('nature'))continue;sctx.beginPath();sctx.ellipse(t.x+SV.x*t.r*.9,t.y+SV.y*t.r*.9,t.r*1.05,t.r*.95,0,0,7);sctx.fill()}
+ for(const st of state.stamps){const d=STAMPS[st.type];if(!layerVisible('props'))continue;if(st.floor&&!(state.roofMode==='interior'&&st.floor===state.level))continue;if(!d||!d.h)continue;const r=d.r*st.s;sctx.beginPath();sctx.ellipse(st.x+SV.x*d.h*st.s,st.y+SV.y*d.h*st.s,r,r*.9,0,0,7);sctx.fill()}
+ if(layerVisible('roads')&&layerVisible('water'))for(const b of derived.bridges){sctx.save();sctx.translate(b.x+SV.x*6,b.y+SV.y*6);sctx.rotate(b.ang);sctx.fillRect(-b.len/2,-b.wd/2,b.len,b.wd);sctx.restore()}}

@@ -1,9 +1,11 @@
 {
   "name": "kartograf-sandbox",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "A local-first tabletop RPG location editor",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "start": "node scripts/dev.mjs --no-watch",
