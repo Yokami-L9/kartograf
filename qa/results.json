@@ -1,0 +1,134 @@
+{
+  "checks": [
+    {
+      "test": "Boot: new demo and districts",
+      "pass": true
+    },
+    {
+      "test": "Automatic bridge retained",
+      "pass": true
+    },
+    {
+      "test": "No external dependencies",
+      "pass": true
+    },
+    {
+      "test": "Generated buildings do not overlap",
+      "pass": true
+    },
+    {
+      "test": "All generated entrances oriented to a road",
+      "pass": true
+    },
+    {
+      "test": "House selected via canvas",
+      "pass": true
+    },
+    {
+      "test": "Manual change protects generated house",
+      "pass": true
+    },
+    {
+      "test": "Regeneration preserves protected house",
+      "pass": true
+    },
+    {
+      "test": "Deterministic regeneration",
+      "pass": true
+    },
+    {
+      "test": "Undo restores previous state",
+      "pass": true
+    },
+    {
+      "test": "Redo restores new state",
+      "pass": true
+    },
+    {
+      "test": "Autosave survives reload",
+      "pass": true
+    },
+    {
+      "test": "Atomic validation of bad import",
+      "pass": true
+    },
+    {
+      "test": "Road draw tool",
+      "pass": true
+    },
+    {
+      "test": "District draw tool creates houses",
+      "pass": true
+    },
+    {
+      "test": "District geometry inside selected bounds",
+      "pass": true
+    },
+    {
+      "test": "Ungroup preserves editable buildings",
+      "pass": true
+    },
+    {
+      "test": "Tavern kit places building and attached interior",
+      "pass": true
+    },
+    {
+      "test": "Interior mode toggle",
+      "pass": true
+    },
+    {
+      "test": "Floor plan persists independently",
+      "pass": true
+    },
+    {
+      "test": "Second floor plan independent",
+      "pass": true
+    },
+    {
+      "test": "Moving a house moves its hand-placed contents",
+      "pass": true
+    },
+    {
+      "test": "Rotation applied",
+      "pass": true
+    },
+    {
+      "test": "Duplicate includes contents",
+      "pass": true
+    },
+    {
+      "test": "Duplicate undone in one step",
+      "pass": true
+    },
+    {
+      "test": "Interior walls tool",
+      "pass": true
+    },
+    {
+      "test": "JSON import/export roundtrip",
+      "pass": true
+    },
+    {
+      "test": "PNG dimensions 4000×2600",
+      "pass": true
+    },
+    {
+      "test": "VTT contains image, walls, doors",
+      "pass": true
+    },
+    {
+      "test": "Mobile no page horizontal overflow",
+      "pass": true
+    },
+    {
+      "test": "Offline: no network requests",
+      "pass": true
+    },
+    {
+      "test": "No JS exceptions",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "network": []
+}

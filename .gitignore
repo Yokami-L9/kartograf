@@ -1,0 +1,14 @@
+node_modules/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+__pycache__/
+.venv/
+qa/*.png
+qa/*.webm
+qa/*.dd2vtt
+qa/test-project.json
+playwright-report/
+test-results/

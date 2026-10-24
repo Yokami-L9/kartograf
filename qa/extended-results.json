@@ -1,0 +1,41 @@
+{
+  "checks": [
+    {
+      "test": "Roof swatch protects manual change",
+      "pass": true
+    },
+    {
+      "test": "Swatch survives regeneration",
+      "pass": true
+    },
+    {
+      "test": "Deleted lot remains excluded",
+      "pass": true
+    },
+    {
+      "test": "Exclusions stored in project",
+      "pass": true
+    },
+    {
+      "test": "All five styles generate usable buildings",
+      "pass": true
+    },
+    {
+      "test": "Four kits create editable objects",
+      "pass": true
+    },
+    {
+      "test": "Version 1 project migrated",
+      "pass": true
+    },
+    {
+      "test": "Animation download produced",
+      "pass": true
+    },
+    {
+      "test": "No browser exceptions",
+      "pass": true
+    }
+  ],
+  "errors": []
+}
